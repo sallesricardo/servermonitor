@@ -47,7 +47,7 @@ def hello():
 @app.route('/system')
 def get_system_info():
     hostname, release, machine = funcs.get_system_data()
-    days, hours, minutes, seconds = funcs.get_system_uptime()
+    days, hours, minutes, seconds, last_boot = funcs.get_system_uptime()
     users = funcs.get_online_users()
     ret = {"system": {"hostname": hostname,
                       "release": release,
@@ -56,12 +56,63 @@ def get_system_info():
            "uptime": {"days": days,
                       "hour": hours,
                       "minutes": minutes,
-                      "seconds": seconds},
+                      "seconds": seconds,
+                      "lastboot": last_boot},
             "users": users}
     return app.response_class(
         response=json.dumps(ret),
         mimetype='application/json'
     )
+
+@app.route('/cpu')
+def get_cpu_info():
+    ret = {"cpu": funcs.get_cpu_specs(),
+           "memory": funcs.get_mem_stat()}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
+
+@app.route('/disks')
+def get_disks_info():
+    ret = {"disks": funcs.get_disks_stats()}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
+
+@app.route('/network')
+def get_network_info():
+    ret = {"network": funcs.get_network_stats()}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
+
+@app.route('/sensors')
+def get_sensors():
+    ret = {"sensors": funcs.get_sensors()}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
+
+@app.route('/users')
+def get_users():
+    ret = {"users": funcs.get_active_users()}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
+
+@app.route('/processes_list')
+def get_processes():
+    ret = {"processes": funcs.get_process_list()}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
+
 
 if __name__ == '__main__':
     debug = os.path.exists('DEBUG')
