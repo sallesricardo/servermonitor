@@ -106,7 +106,18 @@ def get_sensors():
     for device in fans:
         for fan in fans[device]:
             sys_fans[fan.label] = fan.current
-    return {'temperature': sensors, 'fans': sys_fans}
+    ret = {'temperature': sensors, 'fans': sys_fans}
+    if battery:
+        bat = {'percent': battery.percent}
+        if battery.power_plugged:
+            bat['power'] = 'AC'
+        elif battery.power_plugged == None:
+            bat['power'] = 'Unknow'
+        else:
+            bat['power'] = 'battery'
+            bat['secsleft'] = battery.secsleft
+        ret['battery'] = bat
+    return ret
 
 def get_active_users():
     return psutil.users()
