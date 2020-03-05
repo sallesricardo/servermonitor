@@ -2,9 +2,12 @@ import os
 from datetime import timedelta, datetime
 from flask import Flask, render_template, request, session, redirect, url_for, escape, json
 import funcs
+from conf import Conf
+
+conf = Conf()
 
 app = Flask(__name__)
-app.secret_key = b'996caf70-f4df-4db7-a64d-76ca1e8e9ac6'
+app.secret_key = bytes(conf.secret_key, 'utf-8')
    
 @app.after_request
 def add_header(request):
@@ -32,7 +35,7 @@ def not_found(error):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', conf=conf)
 
 @app.route('/clock', methods=['GET'])
 def clock():
@@ -113,6 +116,13 @@ def get_processes():
         mimetype='application/json'
     )
 
+@app.route('/process/<pid>')
+def get_process(pid):
+    ret = {"process": funcs.get_process(pid)}
+    return app.response_class(
+        response=json.dumps(ret),
+        mimetype='application/json'
+    )
 
 if __name__ == '__main__':
     debug = os.path.exists('DEBUG')

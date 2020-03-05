@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Server Monitor - {{ conf.brand }}</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="icon" type="image/x-icon" href="/static/img/{{ conf.favicon }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="/static/img/{{ conf.sm_logo }}" width="32" height="32" class="d-inline-block align-top" alt="">
+            System Monitor
+        </a>
+        <div class="navbar-text">
+            <span id="hostname">hostname</span>
+            <span> - </span>
+            <span id="datetime">01/01/2020 12:12:00</span>
+        </div>
+    </nav>
+    <div class="container" style="margin-top: 15px;">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header bg-info p-1">
+                        System
+                    </div>
+                    <div class="card-body p-1">
+                        <table class="table table-striped table-sm">
+                            <tr>
+                                <td>
+                                    <p class="text-info">OS/Kernel</p>
+                                </td>
+                                <td>
+                                    <p class="text-black-50">Linux / Kernel</p>
+                                <td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="text-info">Last Boot/Uptime</p>
+                                </td>
+                                <td>
+                                    <p class="text-black-50">01/01/2020 12:30:00 / 25d, 04h02m</p>
+                                <td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header bg-info p-1">
+                        CPU
+                    </div>
+                    <div class="card-body p-1">
+                        <table class="table table-striped table-sm">
+                            <tr>
+                                <td>
+                                    <p class="text-info">Model</p>
+                                </td>
+                                <td>
+                                    <p class="text-black-50">Generic Manufacture of Generic Processor Type</p>
+                                <td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="text-info">Cores/Speed</p>
+                                </td>
+                                <td>
+                                    <p class="text-black-50">12 @ 3456.78 MHz</p>
+                                <td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="text-info">Temperature</p>
+                                </td>
+                                <td>
+                                    <p class="text-black-50">92 °C</p>
+                                <td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</body>
+
+</html>

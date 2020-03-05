@@ -28,8 +28,8 @@ def get_system_uptime():
 
 def get_online_users():
     who = subprocess.Popen(['who', '-q'], stdout=subprocess.PIPE)
-    ret_users = who.stdout.readline().decode('ascii')
-    ret_nusers = who.stdout.readline().decode('ascii')
+    ret_users = who.stdout.readline().decode('utf8')
+    ret_nusers = who.stdout.readline().decode('utf8')
     users = {}
     for user in ret_users.split():
         if user in users:
@@ -128,3 +128,7 @@ def get_process_list():
         processes.append(proc.info)
 
     return processes
+
+def get_process(pid):
+    process = {}
+    return process
