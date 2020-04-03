@@ -1,31 +1,26 @@
 import os
 from datetime import timedelta, datetime
-from flask import Flask, render_template, request, session, redirect, url_for, escape, json
+import ujson as json
+from flask import Flask, redirect, url_for, render_template, session
+from flask_restful import Api
+
 import funcs
 from conf import Conf
+
+from resources.system import System
+from resources.cpu import CPU
+from resources.disks import Disks
+from resources.network import Network
+from resources.sensors import Sensors
+from resources.users import Users
+from resources.process import Process
 
 conf = Conf()
 
 app = Flask(__name__)
 app.secret_key = bytes(conf.secret_key, 'utf-8')
-   
-@app.after_request
-def add_header(request):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    request.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    request.headers["Pragma"] = "no-cache"
-    request.headers["Expires"] = "0"
-    request.headers['Cache-Control'] = 'public, max-age=0'
-    return request
-
-@app.before_request
-def before_request():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=5)
-    session.modified = True
+app.config['PROPAGATE_EXCEPTIONS'] = True
+api = Api(app)
 
 
 @app.errorhandler(404)
@@ -37,9 +32,14 @@ def not_found(error):
 def index():
     return render_template('index.html', conf=conf)
 
-@app.route('/clock', methods=['GET'])
-def clock():
-    return funcs.get_datetime()
+
+api.add_resource(System, '/system')
+api.add_resource(CPU, '/cpu')
+api.add_resource(Disks, '/disks')
+api.add_resource(Network, '/network')
+api.add_resource(Sensors, '/sensors')
+api.add_resource(Users, '/users')
+api.add_resource(Process, '/process')
 
 @app.route('/hello', methods=['GET'])
 def hello():
@@ -47,74 +47,6 @@ def hello():
         return redirect(url_for('login'))
     return render_template('hello.html')
 
-@app.route('/system')
-def get_system_info():
-    hostname, release, machine = funcs.get_system_data()
-    days, hours, minutes, seconds, last_boot = funcs.get_system_uptime()
-    users = funcs.get_online_users()
-    ret = {"system": {"hostname": hostname,
-                      "release": release,
-                      "machine": machine},
-           "datetime": funcs.get_datetime(),
-           "uptime": {"days": days,
-                      "hour": hours,
-                      "minutes": minutes,
-                      "seconds": seconds,
-                      "lastboot": last_boot},
-            "users": users}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
-
-@app.route('/cpu')
-def get_cpu_info():
-    ret = {"cpu": funcs.get_cpu_specs(),
-           "memory": funcs.get_mem_stat()}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
-
-@app.route('/disks')
-def get_disks_info():
-    ret = {"disks": funcs.get_disks_stats()}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
-
-@app.route('/network')
-def get_network_info():
-    ret = {"network": funcs.get_network_stats()}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
-
-@app.route('/sensors')
-def get_sensors():
-    ret = {"sensors": funcs.get_sensors()}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
-
-@app.route('/users')
-def get_users():
-    ret = {"users": funcs.get_active_users()}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
-
-@app.route('/processes_list')
-def get_processes():
-    ret = {"processes": funcs.get_process_list()}
-    return app.response_class(
-        response=json.dumps(ret),
-        mimetype='application/json'
-    )
 
 @app.route('/process/<pid>')
 def get_process(pid):
