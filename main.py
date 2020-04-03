@@ -39,7 +39,7 @@ api.add_resource(Disks, '/disks')
 api.add_resource(Network, '/network')
 api.add_resource(Sensors, '/sensors')
 api.add_resource(Users, '/users')
-api.add_resource(Process, '/process')
+api.add_resource(Process, '/process', '/process/<string:name>', '/process/<int:pid>')
 
 @app.route('/hello', methods=['GET'])
 def hello():

@@ -10,8 +10,9 @@ class Disks(Resource):
         disks = {}
         partitions = psutil.disk_partitions()
         for partition in partitions:
-            part = psutil.disk_usage(partition.mountpoint)
-            disks[partition.mountpoint] = {'total': part.total, 
-                                           'free': part.free, 
-                                           'percent': part.percent}
+            if '/snap' not in partition.mountpoint:
+                part = psutil.disk_usage(partition.mountpoint)
+                disks[partition.mountpoint] = {'total': part.total, 
+                                            'free': part.free, 
+                                            'percent': part.percent}
         return disks
