@@ -6,7 +6,8 @@ from datetime import datetime, timedelta
 
 def get_datetime():
     today = datetime.now()
-    return today.strftime("%d/%m/%Y %H:%M:%S")
+    # return today.strftime("%d/%m/%Y %H:%M:%S")
+    return today.isoformat()
 
 def get_system_uptime():
     with open('/proc/uptime', 'r') as uptime:
